@@ -3,7 +3,8 @@ version: '3.5'
 services:
   app:
     build: .
-    ports: 8080:8080
+    ports:
+      - 8080:8080
     volumes:
     - ./:/app
   db:
@@ -14,9 +15,9 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_USER: user
       MYSQL_PASWORD: password
-      ports:
-        - 13306:13306
-      volumes:
-        - ./mysql/data:/var/lib/mysql
-        - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
-        - ./mysql/init_db:/docker-entrypoint-initdb.d
+    ports:
+      - 13306:13306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/init_db:/docker-entrypoint-initdb.d
