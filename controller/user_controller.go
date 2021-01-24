@@ -7,11 +7,15 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/fumist23/game-api/database"
+	"github.com/fumist23/game-api/model"
 )
 
 // /user/createに対するハンドラ
 // requestからnameを取り出してtoken生成してDBに保存して返す
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+
 	body := r.Body
 	defer body.Close()
 
