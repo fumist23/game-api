@@ -10,7 +10,7 @@ import (
 func GenerateTokenWithName(name string) (string, error) {
 
 	// 鍵となる文字列(ここではセキュリティを求めないので全部この鍵を用いる)
-	secretKey := ""
+	secretKey := "secret"
 
 	// トークンはjwtを使用
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
