@@ -51,6 +51,29 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 // /user/getに対するハンドラ
 // headerのx-tokenからtokenを取り出してDBからfetchして該当するuserのnameを取得して返す
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	token := r.Header.Get("x-token")
+	if token == "" {
+		log.Println("token must be included in header")
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	name, err := database.GetUser(ctx, token)
+
+	if err != nil {
+		log.Printf("error occurred in database.GetUser: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	if err := json.NewEncoder(w).Encode(name); err != nil {
+		log.Printf("failed to encode name to json: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
 
 // /user/updateに対するハンドラ
 // x-tokenからtokenを取り出して該当するuserを検証し、受け取ったnameを更新してDB更新して返す
