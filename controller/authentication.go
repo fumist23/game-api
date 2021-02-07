@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -19,7 +18,6 @@ func GenerateTokenWithName(name string) (string, error) {
 	fmt.Printf("token is: %v", token)
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		log.Printf("failed to sign token: &v", err)
 		return "", err
 	}
 
