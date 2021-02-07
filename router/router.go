@@ -9,6 +9,7 @@ func Router() *mux.Router {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/user/create", controller.CreateUser)
+	r.HandleFunc("/user/get", controller.GetUser)
 
 	return r
 }
