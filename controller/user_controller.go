@@ -2,9 +2,8 @@ package controller
 
 import (
 	"bytes"
-	"context"
+	"encoding/gob"
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 
@@ -15,37 +14,39 @@ import (
 // /user/createに対するハンドラ
 // requestからnameを取り出してtoken生成してDBに保存して返す
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 
 	body := r.Body
 	defer body.Close()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	buf := new(bytes.Buffer)
-	io.Copy(buf, body)
-
 	var userCreateRequest model.UserCreateRequest
-	json.Unmarshal(buf.Bytes(), &userCreateRequest)
+	json.NewDecoder(body).Decode(&userCreateRequest)
 
-	name := userCreateRequest.name
+	name := userCreateRequest.Name
 
 	tokenStr, err := GenerateTokenWithName(name)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Pringf("error occurred in GenerateTokenWithName %v", err)
+		log.Printf("error occurred in GenerateTokenWithName %v", err)
 	}
 
 	err = database.CreateUser(ctx, name, tokenStr)
 	if err != nil {
-		log.Printf("error occured in Cdatabase.reateUser: %v", err)
+		log.Printf("error occurred in database.requestUser: %v", err)
 	}
 
 	userCreateResponse := model.UserCreateResponse{
-		token: token,
+		Token: tokenStr,
 	}
 
-	w.Write([]byte(userCreateResponse))
+	buf := bytes.Buffer{}
+	enc := gob.NewEncoder(&buf)
+	err = enc.Encode(userCreateResponse)
+	if err != nil {
+		log.Printf("failed to encode userCreateResponse: %v", err)
+	}
+
+	w.Write(buf.Bytes())
 	w.WriteHeader(http.StatusCreated)
 }
 

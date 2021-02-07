@@ -1,23 +1,23 @@
 package model
 
-//type User struct {
-//	Id int `json:"id"`
-//	Name string `json:"name"`
-//	Token string `json:"token"`
-//}
+type User struct {
+	Id    int    `json:"id"`
+	Name  string `json:"name"`
+	Token string `json:"token"`
+}
 
 type UserCreateRequest struct {
-	name string `json:"name"`
+	Name string `json:"name"`
 }
 
 type UserCreateResponse struct {
-	token string
+	Token string
 }
 
 type UserGetResponse struct {
-	name string
+	Name string
 }
 
 type UserUpdateRequest struct {
-	name string
+	Name string
 }
