@@ -15,7 +15,6 @@ func GenerateTokenWithName(name string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss": name,
 	})
-	fmt.Printf("token is: %v", token)
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err
