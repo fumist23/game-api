@@ -31,3 +31,11 @@ func GetUser(ctx context.Context, token string) (string, error) {
 }
 
 // tokenとnameを受け取ってtokenに該当するuserのnameを更新する
+func UpdateUser(ctx context.Context, token string, name string) error {
+	_, err := DB.QueryContext(ctx, "UPDATE users SET name = ? WHERE token = ? ", name, token)
+	if err != nil {
+		log.Printf("failed to update user: %v", err)
+		return err
+	}
+	return nil
+}
