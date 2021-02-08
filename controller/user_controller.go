@@ -20,7 +20,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	defer body.Close()
 
 	var userCreateRequest model.UserCreateRequest
-	json.NewDecoder(body).Decode(&userCreateRequest)
+	if err := json.NewDecoder(body).Decode(&userCreateRequest); err != nil {
+		log.Printf("failed to decode userCreateRequest: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 
 	name := userCreateRequest.Name
 
@@ -46,7 +49,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("failed to encode userCreateResponse: %v", err)
 	}
 
-	w.Write(buf.Bytes())
+	_, err = w.Write(buf.Bytes())
+	if err != nil {
+		log.Printf("failed to w.Write: %v", err)
+	}
 	w.WriteHeader(http.StatusCreated)
 }
 
