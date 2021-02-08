@@ -48,7 +48,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("failed to encode userCreateResponse: %v", err)
 	}
-
 	_, err = w.Write(buf.Bytes())
 	if err != nil {
 		log.Printf("failed to w.Write: %v", err)
