@@ -52,6 +52,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	_, err = w.Write(buf.Bytes())
 	if err != nil {
 		log.Printf("failed to w.Write: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 	w.WriteHeader(http.StatusCreated)
 }
