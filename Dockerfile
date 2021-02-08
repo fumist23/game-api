@@ -1,7 +1,7 @@
 #Builder Container
 FROM golang:1.15 AS builder
 
-ENV GOOS=liux
+ENV GOOS=linux
 ENV GOARCH=amd64
 ENV CGO_ENABLED=0
 ENV GO111MODULE on
