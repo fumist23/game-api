@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS `go_db`;
+
 USE `go_db`;
 
 CREATE TABLE IF NOT EXISTS users(

@@ -5,5 +5,5 @@ USE `go_db`;
 CREATE TABLE IF NOT EXISTS userCharacters(
     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `userId` INT NOT NULL,
-    `characterId` INT NOT NULL,
-) ENGINE = INNODB DEFAULT CHARSET = utf8mb4;
+    `characterId` INT NOT NULL
+)ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
