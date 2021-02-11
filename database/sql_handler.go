@@ -3,6 +3,8 @@ package database
 import (
 	"context"
 	"log"
+
+	"github.com/fumist23/game-api/model"
 )
 
 // nameをtokenを受け取って保存する
@@ -31,3 +33,55 @@ func GetUser(ctx context.Context, token string) (string, error) {
 }
 
 // tokenとnameを受け取ってtokenに該当するuserのnameを更新する
+
+// GetGachaConfigs ガチャの設定情報を取得する
+func GetGachaConfigs(ctx context.Context) ([]model.GachaConfig, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT reality, probability FROM gachaConfigs")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	gachaConfigs := make([]model.GachaConfig, 0)
+
+	for rows.Next() {
+		var gachaConfig model.GachaConfig
+		if err := rows.Scan(&gachaConfig.Reality, &gachaConfig.Probability); err != nil {
+			return gachaConfigs, err
+		}
+		gachaConfigs = append(gachaConfigs, gachaConfig)
+	}
+
+	if err := rows.Err(); err != nil {
+		return gachaConfigs, err
+	}
+
+	return gachaConfigs, nil
+}
+
+// GetCharacters キャラクターの情報を取得する
+func GetCharacters(ctx context.Context) ([]model.Character, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT name, reality FROM characters")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	characters := make([]model.Character, 0)
+
+	for rows.Next() {
+		var character model.Character
+		if err := rows.Scan(&character.Name, &character.Reality); err != nil {
+			return characters, err
+		}
+		characters = append(characters, character)
+	}
+
+	defer rows.Close()
+
+	if err := rows.Err(); err != nil {
+		return characters, err
+	}
+
+	return characters, nil
+}
