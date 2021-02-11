@@ -18,16 +18,16 @@ func CreateUser(ctx context.Context, name string, token string) error {
 
 // tokenを受け取って該当するuserのnameを取り出す
 
-//func getUser(ctx context.Context, token: string) (string, error) {
-//	row := DB.QueryRowContext(ctx, "SELECT (name) FROM users WHERE token=?", token)
-//	var name string
-//	if err := row.Scan(&name); err != nil {
-//		log.Printf("failed to get user name from database")
-//		return name, err
-//	}
-//
-//	return name, nil
-//
-//}
+func GetUser(ctx context.Context, token string) (string, error) {
+	row := DB.QueryRowContext(ctx, "SELECT name FROM users WHERE token=?", token)
+	var name string
+	if err := row.Scan(&name); err != nil {
+		log.Printf("failed to get user name from database")
+		return name, err
+	}
+
+	return name, nil
+
+}
 
 // tokenとnameを受け取ってtokenに該当するuserのnameを更新する
