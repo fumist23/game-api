@@ -1,11 +1,11 @@
 package model
 
 type Character struct {
-	name    string `json:"name"`
-	reality int    `json:"reality"`
+	Name    string `json:"name"`
+	Reality int    `json:"reality"`
 }
 
 type UserCharacter struct {
-	userID  int `json:"userId"`
-	reality int `json:"reality"`
+	UserID  int `json:"userId"`
+	Reality int `json:"reality"`
 }
