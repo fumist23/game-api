@@ -94,3 +94,13 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 
 	return characters, nil
 }
+
+// ユーザーが引いたキャラクターをDBに保存する
+func PostUserCharacters(ctx context.Context, selectedCharacters []model.Character, userId int) error {
+	for _, selectedCharacter := range selectedCharacters {
+		if _, err := DB.QueryContext(ctx, "INSERT INTO userCharacters(userId, characterId) VALUES(?, ?)", userId, selectedCharacter.ID); err != nil {
+			return err
+		}
+	}
+	return nil
+}
