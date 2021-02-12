@@ -132,6 +132,9 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//引いたキャラクターを返す
-	json.NewEncoder(w).Encode(selectedCharacters)
+	if err := json.NewEncoder(w).Encode(selectedCharacters); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
