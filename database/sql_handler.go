@@ -18,18 +18,28 @@ func CreateUser(ctx context.Context, name string, token string) error {
 	return nil
 }
 
-// tokenを受け取って該当するuserのnameを取り出す
-
-func GetUser(ctx context.Context, token string) (string, error) {
-	row := DB.QueryRowContext(ctx, "SELECT name FROM users WHERE token=?", token)
-	var name string
-	if err := row.Scan(&name); err != nil {
-		log.Printf("failed to get user name from database")
-		return name, err
+// tokenが存在するかチェックする
+func VerifyToken(ctx context.Context, token string) bool {
+	row := DB.QueryRowContext(ctx, "SELECT * FROM users WHERE token=?", token)
+	if err := row.Err(); err != nil {
+		log.Printf("this token is invalid")
+		return false
 	}
 
-	return name, nil
+	return true
+}
 
+// tokenを受け取って該当するuserのnameを取り出す
+
+func GetUser(ctx context.Context, token string) (model.User, error) {
+	row := DB.QueryRowContext(ctx, "SELECT id, name FROM users WHERE token=?", token)
+	var user model.User
+	if err := row.Scan(&user.Id, &user.Name); err != nil {
+		log.Print("failed to get user name from database")
+		return user, err
+	}
+
+	return user, nil
 }
 
 // tokenとnameを受け取ってtokenに該当するuserのnameを更新する
@@ -61,7 +71,7 @@ func GetGachaConfigs(ctx context.Context) ([]model.GachaConfig, error) {
 
 // GetCharacters キャラクターの情報を取得する
 func GetCharacters(ctx context.Context) ([]model.Character, error) {
-	rows, err := DB.QueryContext(ctx, "SELECT name, reality FROM characters")
+	rows, err := DB.QueryContext(ctx, "SELECT id, name, reality FROM characters")
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +81,11 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 
 	for rows.Next() {
 		var character model.Character
-		if err := rows.Scan(&character.Name, &character.Reality); err != nil {
+		if err := rows.Scan(&character.ID, &character.Name, &character.Reality); err != nil {
 			return characters, err
 		}
 		characters = append(characters, character)
 	}
-
 	defer rows.Close()
 
 	if err := rows.Err(); err != nil {
