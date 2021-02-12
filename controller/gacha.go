@@ -13,6 +13,7 @@ import (
 	"github.com/fumist23/game-api/model"
 )
 
+// 指定された回数分、ランダムにキャラクターを返す
 func getRandomCharacters(ctx context.Context, count int) ([]model.Character, error) {
 	// 対象となるキャラクターの取得
 	characters, err := database.GetCharacters(ctx)
@@ -68,6 +69,7 @@ func getRandomCharacters(ctx context.Context, count int) ([]model.Character, err
 	return selectedCharacters, nil
 }
 
+// グループ化されたキャラクターとランダムな数字からキャラクターを選び、IDだけ返す
 func gacha(groupedCharactersList []model.GroupedCharacters, randomNum float64) int {
 	var accum float64 = 0
 	var selectedCharacterID int
@@ -83,6 +85,7 @@ func gacha(groupedCharactersList []model.GroupedCharacters, randomNum float64) i
 	return selectedCharacterID
 }
 
+// DrawGacha ガチャを引く
 func DrawGacha(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	token := r.Header.Get("x-token")
