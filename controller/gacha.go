@@ -92,7 +92,7 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 
 	//tokenの検証
 	isValidToken := database.VerifyToken(ctx, token)
-	if isValidToken == false {
+	if !isValidToken {
 		log.Printf("this token is invalid")
 		w.WriteHeader(http.StatusBadRequest)
 	}
