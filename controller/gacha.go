@@ -55,7 +55,7 @@ func getRandomCharacters(ctx context.Context, count int) ([]model.Character, err
 		log.Printf("selectedCharacterIDs: %v, randomNum: %v", selectedCharacterIDs, randomNum)
 	}
 
-	selectedCharacters := make([]model.Character, count)
+	selectedCharacters := make([]model.Character, 0, count)
 
 	for _, selectedCharacterID := range selectedCharacterIDs {
 		for _, character := range characters {
@@ -112,24 +112,26 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//引かれたキャラクターを取得
-	characters, err := getRandomCharacters(ctx, count)
+	selectedCharacters, err := getRandomCharacters(ctx, count)
 	if err != nil {
 		log.Printf("failed to getRandomCharacters: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 	// ガチャを引くユーザーの情報を取得
-	// user, err := database.GetUser(ctx, token)
-	// if err != nil {
-	// 	log.Printf("failoed to get user: %v", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// }
-
-	log.Printf("charatcers: %v", characters)
+	user, err := database.GetUser(ctx, token)
+	if err != nil {
+		log.Printf("failoed to get user: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 
 	// userCharacterテーブルに入れる
+	if err := database.PostUserCharacters(ctx, selectedCharacters, user.Id); err != nil {
+		log.Printf("failed to PostUserCharacters: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 
 	//引いたキャラクターを返す
-
+	json.NewEncoder(w).Encode(selectedCharacters)
 	w.WriteHeader(http.StatusOK)
 }
