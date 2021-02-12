@@ -16,6 +16,17 @@ func CreateUser(ctx context.Context, name string, token string) error {
 	return nil
 }
 
+// tokenが存在するかチェックする
+func VerifyToken(ctx context.Context, token string) bool {
+	row := DB.QueryRowContext(ctx, "SELECT * FROM users WHERE token=?", token)
+	if err := row.Err(); err != nil {
+		log.Printf("this token is invalid")
+		return false
+	}
+
+	return true
+}
+
 // tokenを受け取って該当するuserのnameを取り出す
 
 func GetUser(ctx context.Context, token string) (string, error) {

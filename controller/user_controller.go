@@ -88,7 +88,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	token := r.Header.Get("x-token")
-	if token == "" {
+	isValidToken := database.VerifyToken(ctx, token)
+	if isValidToken == false {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	body := r.Body
