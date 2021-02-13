@@ -93,7 +93,6 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 		}
 		characters = append(characters, character)
 	}
-	defer rows.Close()
 
 	if err := rows.Err(); err != nil {
 		return characters, err
@@ -110,4 +109,29 @@ func PostUserCharacters(ctx context.Context, selectedCharacters []model.Characte
 		}
 	}
 	return nil
+}
+
+func GetUserCharactersByID(ctx context.Context, userId int) ([]model.UserCharacter, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT id, characterId, characterName FROM userCharacters WHERE userId = ?", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userCharacters := make([]model.UserCharacter, 0)
+
+	for rows.Next() {
+		var userCharacter model.UserCharacter
+		err := rows.Scan(&userCharacter.UserCharacterID, &userCharacter.CharacterID, &userCharacter.CharacterName)
+		if err != nil {
+			return nil, err
+		}
+		userCharacters = append(userCharacters, userCharacter)
+	}
+
+	if err := rows.Err(); err != nil {
+		return userCharacters, err
+	}
+
+	return userCharacters, nil
 }
