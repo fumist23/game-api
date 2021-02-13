@@ -31,6 +31,9 @@ func GetUserCharacters(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	json.NewEncoder(w).Encode(userCharacters)
+	if err := json.NewEncoder(w).Encode(userCharacters); err != nil {
+		log.Printf("failed to encode userCharacters")
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 	w.WriteHeader(http.StatusOK)
 }
