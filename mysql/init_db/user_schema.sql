@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users(
     `token` VARCHAR(256) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
-)ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4;
 
-INSERT INTO users(name, token) VALUE('satofumi', 'abc');
+INSERT INTO
+    users(name, token) VALUE('satofumi', 'abc');
