@@ -12,6 +12,7 @@ func Router() *mux.Router {
 	r.HandleFunc("/user/get", controller.GetUser)
 	r.HandleFunc("/user/update", controller.UpdateUser)
 	r.HandleFunc("/gacha/draw", controller.DrawGacha)
+	r.HandleFunc("/character/list", controller.GetUserCharacters)
 
 	return r
 }
