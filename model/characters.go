@@ -7,7 +7,7 @@ type Character struct {
 }
 
 type UserCharacter struct {
-	UserID        int    `json:"userId"`
-	CharacterID   int    `json:"characterId"`
-	CharacterName string `json:"characterName"`
+	UserCharacterID int    `json:"id"`
+	CharacterID     int    `json:"characterId"`
+	CharacterName   string `json:"characterName"`
 }
