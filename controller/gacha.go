@@ -49,11 +49,11 @@ func getRandomCharacters(ctx context.Context, count int) ([]model.Character, err
 	rand.Seed(time.Now().UnixNano())
 
 	selectedCharacterIDs := make([]int, 0)
+
 	for i := 0; i < count; i++ {
 		randomNum := rand.Float64()
 		selectedCharacterID := gacha(groupedCharactersList, randomNum)
 		selectedCharacterIDs = append(selectedCharacterIDs, selectedCharacterID)
-		log.Printf("selectedCharacterIDs: %v, randomNum: %v", selectedCharacterIDs, randomNum)
 	}
 
 	selectedCharacters := make([]model.Character, 0, count)
@@ -128,7 +128,7 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
-	// userCharacterテーブルに入れる
+	// 取得したキャラクターをuserCharacterテーブルに入れる
 	if err := database.PostUserCharacters(ctx, selectedCharacters, user.Id); err != nil {
 		log.Printf("failed to PostUserCharacters: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
