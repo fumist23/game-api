@@ -86,3 +86,30 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 // /user/updateに対するハンドラ
 // x-tokenからtokenを取り出して該当するuserを検証し、受け取ったnameを更新してDB更新して返す
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	token := r.Header.Get("x-token")
+	isValidToken := database.VerifyToken(ctx, token)
+	if !isValidToken {
+		w.WriteHeader(http.StatusUnauthorized)
+	}
+	body := r.Body
+	defer body.Close()
+
+	var userUpdateRequest model.UserUpdateRequest
+
+	if err := json.NewDecoder(body).Decode(&userUpdateRequest); err != nil {
+		log.Printf("failed to decode request.Body: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	name := userUpdateRequest.Name
+
+	err := database.UpdateUser(ctx, token, name)
+	if err != nil {
+		log.Printf("failed to UpdateUser: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+}
