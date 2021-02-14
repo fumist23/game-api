@@ -53,7 +53,7 @@ func UpdateUser(ctx context.Context, token string, name string) error {
 
 // GetGachaConfigs ガチャの設定情報を取得する
 func GetGachaConfigs(ctx context.Context) ([]model.GachaConfig, error) {
-	rows, err := DB.QueryContext(ctx, "SELECT reality, probability FROM gachaConfigs")
+	rows, err := DB.QueryContext(ctx, "SELECT reality, probability FROM gacha_configs")
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 // ユーザーが引いたキャラクターをDBに保存する
 func PostUserCharacters(ctx context.Context, selectedCharacters []model.Character, userId int) error {
 	for _, selectedCharacter := range selectedCharacters {
-		if _, err := DB.QueryContext(ctx, "INSERT INTO userCharacters(userId, characterId, characterName) VALUES(?, ?, ?)", userId, selectedCharacter.ID, selectedCharacter.Name); err != nil {
+		if _, err := DB.QueryContext(ctx, "INSERT INTO user_characters(userId, characterId, characterName) VALUES(?, ?, ?)", userId, selectedCharacter.ID, selectedCharacter.Name); err != nil {
 			return err
 		}
 	}
@@ -112,7 +112,7 @@ func PostUserCharacters(ctx context.Context, selectedCharacters []model.Characte
 }
 
 func GetUserCharactersByID(ctx context.Context, userId int) ([]model.UserCharacter, error) {
-	rows, err := DB.QueryContext(ctx, "SELECT id, characterId, characterName FROM userCharacters WHERE userId = ?", userId)
+	rows, err := DB.QueryContext(ctx, "SELECT id, characterId, characterName FROM user_characters WHERE userId = ?", userId)
 	if err != nil {
 		return nil, err
 	}

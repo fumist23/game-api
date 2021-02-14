@@ -124,7 +124,7 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 	// ガチャを引くユーザーの情報を取得
 	user, err := database.GetUser(ctx, token)
 	if err != nil {
-		log.Printf("failoed to get user: %v", err)
+		log.Printf("failed to get user: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
