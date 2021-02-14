@@ -9,7 +9,7 @@ ENV GO111MODULE on
 #作業ディレクトリを/appに指定
 WORKDIR /app
 
-#api.game/を/appにcopy
+#game-api/を/appにcopy
 COPY . .
 
 #airの追加

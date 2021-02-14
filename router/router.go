@@ -1,13 +1,14 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/fumist23/game-api/controller"
-	"github.com/gorilla/mux"
 )
 
-func Router() *mux.Router {
+func Router() *http.ServeMux {
 
-	r := mux.NewRouter()
+	r := http.NewServeMux()
 	r.HandleFunc("/user/create", controller.CreateUser)
 	r.HandleFunc("/user/get", controller.GetUser)
 	r.HandleFunc("/user/update", controller.UpdateUser)
