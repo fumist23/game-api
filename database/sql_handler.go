@@ -101,10 +101,20 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 	return characters, nil
 }
 
+func GetCharacter(ctx context.Context, characterId int) (model.Character, nil) {
+	row := DB.QueryRowContext(ctx, "SELECT id, name, reality FROM characters")
+
+	var character model.Character
+	if err := row.Scan(&character.ID, &character.Name, &character.Reality); err != nil {
+		return character, err
+	}
+	return character, nil
+}
+
 // ユーザーが引いたキャラクターをDBに保存する
 func PostUserCharacters(ctx context.Context, selectedCharacters []model.Character, userId int) error {
 	for _, selectedCharacter := range selectedCharacters {
-		if _, err := DB.QueryContext(ctx, "INSERT INTO user_characters(userId, characterId, characterName) VALUES(?, ?, ?)", userId, selectedCharacter.ID, selectedCharacter.Name); err != nil {
+		if _, err := DB.QueryContext(ctx, "INSERT INTO userCharacters(userId, characterId) VALUES(?, ?)", userId, selectedCharacter.ID); err != nil {
 			return err
 		}
 	}
