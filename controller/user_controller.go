@@ -67,12 +67,14 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 
-	name, err := database.GetUser(ctx, token)
+	user, err := database.GetUser(ctx, token)
 
 	if err != nil {
 		log.Printf("error occurred in database.GetUser: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	name := user.Name
 
 	if err := json.NewEncoder(w).Encode(name); err != nil {
 		log.Printf("failed to encode name to json: %v", err)

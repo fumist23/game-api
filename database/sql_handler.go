@@ -3,6 +3,8 @@ package database
 import (
 	"context"
 	"log"
+
+	"github.com/fumist23/game-api/model"
 )
 
 // nameをtokenを受け取って保存する
@@ -29,16 +31,15 @@ func VerifyToken(ctx context.Context, token string) bool {
 
 // tokenを受け取って該当するuserのnameを取り出す
 
-func GetUser(ctx context.Context, token string) (string, error) {
-	row := DB.QueryRowContext(ctx, "SELECT name FROM users WHERE token=?", token)
-	var name string
-	if err := row.Scan(&name); err != nil {
-		log.Printf("failed to get user name from database")
-		return name, err
+func GetUser(ctx context.Context, token string) (model.User, error) {
+	row := DB.QueryRowContext(ctx, "SELECT id, name FROM users WHERE token=?", token)
+	var user model.User
+	if err := row.Scan(&user.Id, &user.Name); err != nil {
+		log.Print("failed to get user name from database")
+		return user, err
 	}
 
-	return name, nil
-
+	return user, nil
 }
 
 // tokenとnameを受け取ってtokenに該当するuserのnameを更新する
@@ -48,4 +49,89 @@ func UpdateUser(ctx context.Context, token string, name string) error {
 		return err
 	}
 	return nil
+}
+
+// GetGachaConfigs ガチャの設定情報を取得する
+func GetGachaConfigs(ctx context.Context) ([]model.GachaConfig, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT reality, probability FROM gacha_configs")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	gachaConfigs := make([]model.GachaConfig, 0)
+
+	for rows.Next() {
+		var gachaConfig model.GachaConfig
+		if err := rows.Scan(&gachaConfig.Reality, &gachaConfig.Probability); err != nil {
+			return gachaConfigs, err
+		}
+		gachaConfigs = append(gachaConfigs, gachaConfig)
+	}
+
+	if err := rows.Err(); err != nil {
+		return gachaConfigs, err
+	}
+
+	return gachaConfigs, nil
+}
+
+// GetCharacters キャラクターの情報を取得する
+func GetCharacters(ctx context.Context) ([]model.Character, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT id, name, reality FROM characters")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	characters := make([]model.Character, 0)
+
+	for rows.Next() {
+		var character model.Character
+		if err := rows.Scan(&character.ID, &character.Name, &character.Reality); err != nil {
+			return characters, err
+		}
+		characters = append(characters, character)
+	}
+
+	if err := rows.Err(); err != nil {
+		return characters, err
+	}
+
+	return characters, nil
+}
+
+// ユーザーが引いたキャラクターをDBに保存する
+func PostUserCharacters(ctx context.Context, selectedCharacters []model.Character, userId int) error {
+	for _, selectedCharacter := range selectedCharacters {
+		if _, err := DB.QueryContext(ctx, "INSERT INTO user_characters(userId, characterId, characterName) VALUES(?, ?, ?)", userId, selectedCharacter.ID, selectedCharacter.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func GetUserCharactersByID(ctx context.Context, userId int) ([]model.UserCharacter, error) {
+	rows, err := DB.QueryContext(ctx, "SELECT id, characterId, characterName FROM user_characters WHERE userId = ?", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	userCharacters := make([]model.UserCharacter, 0)
+
+	for rows.Next() {
+		var userCharacter model.UserCharacter
+		err := rows.Scan(&userCharacter.UserCharacterID, &userCharacter.CharacterID, &userCharacter.CharacterName)
+		if err != nil {
+			return nil, err
+		}
+		userCharacters = append(userCharacters, userCharacter)
+	}
+
+	if err := rows.Err(); err != nil {
+		return userCharacters, err
+	}
+
+	return userCharacters, nil
 }
