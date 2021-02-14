@@ -48,29 +48,23 @@ func getRandomCharacters(ctx context.Context, count int) ([]model.Character, err
 
 	rand.Seed(time.Now().UnixNano())
 
-	selectedCharacterIDs := make([]int, 0)
+	selectedCharacters := make([]model.Character, 0)
 
 	for i := 0; i < count; i++ {
 		randomNum := rand.Float64()
-		selectedCharacterID := gacha(groupedCharactersList, randomNum)
-		selectedCharacterIDs = append(selectedCharacterIDs, selectedCharacterID)
-	}
-
-	selectedCharacters := make([]model.Character, 0, count)
-
-	for _, selectedCharacterID := range selectedCharacterIDs {
-		for _, character := range characters {
-			if character.ID == selectedCharacterID {
-				selectedCharacters = append(selectedCharacters, character)
-				break
-			}
+		selectedCharacter, err := gacha(ctx, groupedCharactersList, randomNum)
+		if err != nil {
+			log.Printf("failed to get selectedCharacter: %v", err)
+			break
 		}
+		selectedCharacters = append(selectedCharacters, selectedCharacter)
 	}
+
 	return selectedCharacters, nil
 }
 
 // グループ化されたキャラクターとランダムな数字からキャラクターを選び、IDだけ返す
-func gacha(groupedCharactersList []model.GroupedCharacters, randomNum float64) int {
+func gacha(ctx context.Context, groupedCharactersList []model.GroupedCharacters, randomNum float64) (model.Character, error) {
 	var accum float64 = 0
 	var selectedCharacterID int
 
@@ -82,20 +76,19 @@ func gacha(groupedCharactersList []model.GroupedCharacters, randomNum float64) i
 		}
 	}
 
-	return selectedCharacterID
+	selectedCharacter, err := database.GetCharacter(ctx, selectedCharacterID)
+	if err != nil {
+		log.Printf("failed to get charater: %v", err)
+		return selectedCharacter, err
+	}
+
+	return selectedCharacter, nil
 }
 
 // DrawGacha ガチャを引く
 func DrawGacha(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	token := r.Header.Get("x-token")
-
-	//tokenの検証
-	isValidToken := database.VerifyToken(ctx, token)
-	if !isValidToken {
-		log.Printf("this token is invalid")
-		w.WriteHeader(http.StatusBadRequest)
-	}
 
 	body := r.Body
 	defer body.Close()
