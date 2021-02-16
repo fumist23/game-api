@@ -27,23 +27,20 @@ jobs:
       - name: Set GitHubCommitHash to env
         run: |
           echo "SHA8=${GITHUB_SHA::8}" >> $GITHUB_ENV
-      
-      - name: Set env Production
-        if: github.ref == 'refs/heads/main'
-        run: |  
-          echo "ECR_REPOSITORY=cta-production" >> $GITHUB_ENV
-          echo "S3_UPLOAD_BUCKET=cta-production-imageinfo" >> $GITHUB_ENV
 
       - name: CI for ECR & S3
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: cta-production
           CONTAINER_NAME: api
+          S3_UPLOAD_BUCKET: cta-production-imageinfo
         #working-directory: api
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 .
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
           echo '[{"name": "'$CONTAINER_NAME'", "imageUri": "'$ECR_REGISTRY/$ECR_REPOSITORY:$SHA8'"}]' > imagedefinitions.json
           zip imagedefinitions.json.zip imagedefinitions.json
           aws s3 cp ./imagedefinitions.json.zip s3://$S3_UPLOAD_BUCKET/ --quiet
