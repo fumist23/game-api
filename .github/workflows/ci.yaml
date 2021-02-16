@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  fmt:
+  build-and-push:
     name: Push docker image to AWS
     runs-on: ubuntu-latest
     
