@@ -101,7 +101,7 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 	return characters, nil
 }
 
-func GetCharacter(ctx context.Context, characterId int) (model.Character, nil) {
+func GetCharacter(ctx context.Context, characterId int) (model.Character, error) {
 	row := DB.QueryRowContext(ctx, "SELECT id, name, reality FROM characters")
 
 	var character model.Character
@@ -122,7 +122,7 @@ func PostUserCharacters(ctx context.Context, selectedCharacters []model.Characte
 }
 
 func GetUserCharactersByID(ctx context.Context, userId int) ([]model.UserCharacter, error) {
-	rows, err := DB.QueryContext(ctx, "SELECT id, characterId, characterName FROM user_characters WHERE userId = ?", userId)
+	rows, err := DB.QueryContext(ctx, "SELECT user_characters.id, user_characters.characterId, characters.name FROM user_characters WHERE userId = ? INNER JOIN characters ON user_characters.characterId = characters.id", userId)
 	if err != nil {
 		return nil, err
 	}
@@ -137,6 +137,7 @@ func GetUserCharactersByID(ctx context.Context, userId int) ([]model.UserCharact
 			return nil, err
 		}
 		userCharacters = append(userCharacters, userCharacter)
+		log.Printf("userCharacters🔥🔥🔥: %v", userCharacters)
 	}
 
 	if err := rows.Err(); err != nil {
