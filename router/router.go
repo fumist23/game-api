@@ -14,6 +14,7 @@ func Router() *http.ServeMux {
 	r.HandleFunc("/user/update", controller.UpdateUser)
 	r.HandleFunc("/gacha/draw", controller.DrawGacha)
 	r.HandleFunc("/character/list", controller.GetUserCharacters)
+	r.HandleFunc("/check", controller.Check)
 
 	return r
 }
