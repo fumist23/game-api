@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS gacha_configs(
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO
-    gachaConfigs(reality, probability) VALUE(5, 0.01);
+    gacha_configs(reality, probability) VALUE(5, 0.01);
 
 INSERT INTO
-    gachaConfigs(reality, probability) VALUE(4, 0.1);
+    gacha_configs(reality, probability) VALUE(4, 0.1);
 
 INSERT INTO
-    gachaConfigs(reality, probability) VALUE(3, 0.89);
+    gacha_configs(reality, probability) VALUE(3, 0.89);
