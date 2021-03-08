@@ -9,14 +9,11 @@ services:
       - 8080:8080
     volumes:
       - ./:/app
+    env_file:
+      - .env
   db:
     image: mysql:8.0
     container_name: game-db
-    environment:
-      MYSQL_DATABASE: go_db
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
     ports:
       - 13306:13306
     volumes:
