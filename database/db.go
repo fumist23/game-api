@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kelseyhightower/envconfig"
@@ -29,13 +30,13 @@ func init() {
 	dbConf := dbConfig{}
 	err := envconfig.Process("db", &dbConf)
 	if err != nil {
-		panic(err)
+		log.Printf("db init error: %v", err)
 	}
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbConf.User, dbConf.Password, dbConf.Host, dbConf.Database)
 	db, err := dbClient(dsn)
 	if err != nil {
-		panic(err)
+		log.Printf("db init error: %v", err)
 	}
 	DB = db
 }
