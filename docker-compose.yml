@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/app
     env_file:
-      - .env.docker
+      - .env.app
   db:
     image: mysql:8.0
     container_name: game-db
@@ -21,4 +21,4 @@ services:
       - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init_db:/docker-entrypoint-initdb.d
     env_file:
-      - .env
+      - .env.db

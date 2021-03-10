@@ -18,3 +18,7 @@ mysql/data
 # vendor/
 
 tmp/
+
+# ENV FILES
+.env.app
+.env.db
