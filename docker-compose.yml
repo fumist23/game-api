@@ -10,7 +10,7 @@ services:
     volumes:
       - ./:/app
     env_file:
-      - .env.app
+      - .env
   db:
     image: mysql:8.0
     container_name: game-db
