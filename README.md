@@ -3,8 +3,8 @@
 - You run the following command.
 ```
 ### api
-cp .env{.sample,}
+$ cp .env{.sample,}
 
 ### db
-cp .env.db{.sample,}
+$ cp .env.db{.sample,}
 ```
