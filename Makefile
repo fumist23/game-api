@@ -16,7 +16,7 @@ down: ## docker down
 app: ## app container sh
 	docker exec -it $(APP) sh
 
-db: ## db container sh
+db: ## db container bash
 	docker exec -it $(DB) bash
 
 logs: ## docker logs 
