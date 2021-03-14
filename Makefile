@@ -13,7 +13,6 @@ stop: ## docker stop
 down: ## docker down
 	docker-compose down
 
-
 app: ## app container sh
 	docker exec -it $(APP) sh
 
