@@ -1,6 +1,6 @@
 # game-api
 ## env files.
-- You run the following command
+- You run the following command.
 ```
 ### api
 cp .env{.sample,}
