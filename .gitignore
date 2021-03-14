@@ -19,6 +19,9 @@ mysql/data
 
 tmp/
 
+# General
+.DS_Store
+
 # ENV FILES
-.env.app
+.env
 .env.db
