@@ -39,7 +39,6 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-
           echo '[{"name": "'$CONTAINER_NAME'", "imageUri": "'$ECR_REGISTRY/$ECR_REPOSITORY:$SHA8'"}]' > imagedefinitions.json
           zip imagedefinitions.json.zip imagedefinitions.json
           aws s3 cp ./imagedefinitions.json.zip s3://$S3_UPLOAD_BUCKET/ --quiet
