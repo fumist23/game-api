@@ -1,34 +1,43 @@
-APP_CONTAINER_NAME=game-api_app
-DB_CONTAINER_NAME=game-db
+COMPOSE=docker-compose
+UP=$(COMPOSE) up -d
+BUILD=$(COMPOSE) build --no-cache
+EXEC=$(COMPOSE) exec
+DB=$(EXEC)
+LOGS=$(COMPOSE) logs -f
 APP=app
 DB=db
 
-build: ## docker build
-	docker-compose build --no-cache
+all: build up
 
-run: ## docker up
-	docker-compose up -d
+build: ## docker build
+	$(BUILD)
+
+up: ## docker up
+	$(UP)
 
 stop: ## docker stop
-	docker-compose stop
+	$(COMPOSE) stop
 
 down: ## docker down
-	docker-compose down
+	$(COMPOSE) down
 
 app: ## app container sh
-	docker exec -it $(APP_CONTAINER_NAME) sh
+	$(EXEC) $(APP) sh
 
 db: ## db container bash
-	docker exec -it $(DB_CONTAINER_NAME) bash
+	$(EXEC) $(DB) bash
+
+db/mysql: ## db(MySQL) container's MySQL access
+	$(EXEC) $(DB) mysql --defaults-extra-file=/home/access.cnf
 
 logs: ## docker logs 
-	docker-compose logs -f
+	$(LOGS)
 
 logs/app: ## app container logs
-	docker-compose logs -f $(APP)
+	$(LOGS) $(APP)
 
 logs/db: ## db container logs
-	docker-compose logs -f $(DB)
+	$(LOGS) $(DB)
 
 help: ## Display this help screen
 	@grep -E '^[a-zA-Z/_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'	
