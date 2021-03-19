@@ -2,7 +2,7 @@ name: CI for AWS
 on:
   push:
     branches:
-      - feature/ren/fix-initd
+      - main
 
 jobs:
   build-and-push:
