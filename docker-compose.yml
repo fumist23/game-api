@@ -7,17 +7,16 @@ services:
       - 8080:8080
     volumes:
       - ./:/app
+    env_file:
+      - .env
   db:
     image: mysql:8.0
     container_name: game-db
-    environment:
-      MYSQL_DATABASE: go_db
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
     ports:
       - 13306:13306
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init_db:/docker-entrypoint-initdb.d
+    env_file:
+      - .env.db
