@@ -18,3 +18,10 @@ mysql/data
 # vendor/
 
 tmp/
+
+# General
+.DS_Store
+
+# ENV FILES
+.env
+.env.db
