@@ -18,3 +18,9 @@ mysql/data
 # vendor/
 
 tmp/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfvars
+
