@@ -35,7 +35,7 @@ jobs:
           CONTAINER_NAME: api
           S3_UPLOAD_BUCKET: cta-production-imageinfo
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 . -f Dockerfile.production
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8 $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHA8
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest

@@ -100,6 +100,8 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
+	log.Println("gachaDrawRequest", gachaDrawRequest)
+
 	count := gachaDrawRequest.Count
 
 	if count <= 0 {
@@ -114,6 +116,8 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
+	log.Println("selectedCharacters", selectedCharacters)
+
 	// ガチャを引くユーザーの情報を取得
 	user, err := database.GetUser(ctx, token)
 	if err != nil {
@@ -121,11 +125,15 @@ func DrawGacha(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 
+	log.Println("user", user)
+
 	// 取得したキャラクターをuserCharacterテーブルに入れる
 	if err := database.PostUserCharacters(ctx, selectedCharacters, user.Id); err != nil {
 		log.Printf("failed to PostUserCharacters: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	log.Println("database.PostUserCharacters", err)
 
 	//引いたキャラクターを返す
 	if err := json.NewEncoder(w).Encode(selectedCharacters); err != nil {
