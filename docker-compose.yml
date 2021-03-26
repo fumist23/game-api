@@ -3,6 +3,7 @@ version: "3.5"
 services:
   app:
     build: .
+    container_name: game-api_app
     ports:
       - 8080:8080
     volumes:
@@ -18,5 +19,4 @@ services:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init_db:/docker-entrypoint-initdb.d
-    env_file:
-      - .env.db
+      - ./mysql/access.conf:/home/access.cnf
