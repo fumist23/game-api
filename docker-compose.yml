@@ -22,4 +22,4 @@ services:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
       - ./mysql/init_db:/docker-entrypoint-initdb.d
-      - ./mysql/access.conf:/home/access.cnf
+      
