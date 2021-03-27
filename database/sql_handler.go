@@ -102,7 +102,7 @@ func GetCharacters(ctx context.Context) ([]model.Character, error) {
 }
 
 func GetCharacter(ctx context.Context, characterId int) (model.Character, error) {
-	row := DB.QueryRowContext(ctx, "SELECT id, name, reality FROM characters")
+	row := DB.QueryRowContext(ctx, "SELECT id, name, reality FROM characters WHERE id = ?", characterId)
 
 	var character model.Character
 	if err := row.Scan(&character.ID, &character.Name, &character.Reality); err != nil {
