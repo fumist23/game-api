@@ -14,7 +14,7 @@ services:
     image: mysql:8.0
     container_name: game-db
     ports:
-      - 13306:13306
+      - 13306:3306
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/my.conf:/etc/mysql/conf.d/my.cnf
